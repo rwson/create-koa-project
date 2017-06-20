@@ -21,13 +21,13 @@ app.use(async(ctx, next) => {
         ctx.body = err;
         ctx.status = err.status || 500;
     }
-})
+});
 
 // 设置Header
 app.use(async(ctx, next) => {
     await next();
     ctx.set("X-Powered-By", "create-koa-app");
-})
+});
 
 // 设置gzip
 app.use(compress({

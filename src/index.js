@@ -180,18 +180,6 @@ function yarnAccess() {
     }
 }
 
-//  installing packages loader
-function startLoader() {
-    return (function() {
-        var P = ["⠋", "⠙", "⠹", "⠸", "⠼", "⠴", "⠦", "⠧", "⠇", "⠏"];
-        var x = 0;
-        return setInterval(() => {
-            process.stdout.write("\r" + P[x++] + " installing packages. this might take a couple minutes...");
-            x &= 7;
-        }, 80);
-    })()
-}
-
 //  output some develop infomation
 function outputInfo(language, { name }, target) {
     console.log(`project create success! ${name} at ${cwd}\n`);

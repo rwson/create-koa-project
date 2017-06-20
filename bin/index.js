@@ -188,7 +188,7 @@ if (exists) {
     process.exit(1);
 }
 
-cConsole.cyan("this command will create project based on koa2, if you want to use koa1, please use 'create-koa-app koa#1 <project name>'");
+// cConsole.cyan("this command will create project based on koa2, if you want to use koa1, please use 'create-koa-app koa#1 <project name>'");
 
 inquirer.prompt({
     name: "language",
@@ -249,18 +249,6 @@ inquirer.prompt({
     } catch (e) {
         return false;
     }
-}
-
-//  installing packages loader
-function startLoader() {
-    return function () {
-        var P = ["⠋", "⠙", "⠹", "⠸", "⠼", "⠴", "⠦", "⠧", "⠇", "⠏"];
-        var x = 0;
-        return setInterval(() => {
-            process.stdout.write("\r" + P[x++] + " installing packages. this might take a couple minutes...");
-            x &= 7;
-        }, 80);
-    }();
 }
 
 //  output some develop infomation
