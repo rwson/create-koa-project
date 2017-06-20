@@ -1,4 +1,4 @@
-# create-koa-app
+# create-koa-project
 
 a command line tool to create koa application quickly
 
