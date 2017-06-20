@@ -10,7 +10,7 @@
     "node": ">=6"
   },
   "bin": {
-    "create-koa-app": "bin/index.js"
+    "create-koa-project": "bin/index.js"
   },
   "keywords": [
     "koa2",

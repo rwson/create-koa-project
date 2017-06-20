@@ -42,7 +42,7 @@ if (exists) {
     process.exit(1);
 }
 
-cConsole.cyan("this command will create project based on koa2, if you want to use koa1, please use 'create-koa-app koa#1 <project name>'");
+// cConsole.cyan("this command will create project based on koa2, if you want to use koa1, please use 'create-koa-app koa#1 <project name>'");
 
 inquirer.prompt({
     name: "language",
@@ -66,6 +66,11 @@ inquirer.prompt({
 
     //  user input some project infomation
     name = await projectName(name);
+    if (name.name !== args[0]) {
+        fse.moveSync(target, path.join(cwd, name.name));
+        target = path.join(cwd, name.name);
+    }
+
     version = await projectVersion(version);
     description = await projectDescription(description);
     main = await projectMain(main);
@@ -75,20 +80,16 @@ inquirer.prompt({
     //  install dependences
     cConsole.cyan("installing packages. this might take a couple minutes...");
     installRes = await installDep(target);
-    if (installRes) {
-        process.stdout.write("\n");
-        if (installRes.success) {
-            cConsole.cyan("dependences install success!");
-        } else {
-            cConsole.red("dependences install fail with following message!");
-            cConsole.red(installRes.errorInfo.toString());
-            process.exit(1);
-        }
-
+    console.log("");
+    if (installRes.success) {
+        cConsole.cyan("dependences install success!");
         //  output some developing infomation
         outputInfo(language, name, target);
-        process.exit(1);
+    } else {
+        await fse.removeSync(target);
+        cConsole.red("dependences install fail!");
     }
+    process.exit(1);
 });
 
 //  user select project name
@@ -134,11 +135,9 @@ async function projectMain(defaultMain) {
 //  installing packages
 async function installDep(target) {
     const useYarn = yarnAccess();
-    let install = null,
-        errorInfo = {};
+    let install = null;
     try {
         return new Promise((resolve, reject) => {
-            errorInfo = false;
             if (useYarn) {
                 install = cp.spawn("yarn", {
                     cwd: target,
@@ -152,14 +151,13 @@ async function installDep(target) {
             }
 
             install.on("close", (code) => {
-                if (Object.keys(errorInfo).length === 0 || errorInfo.length === 0 || code === 0) {
+                if (code === 0) {
                     resolve({
                         success: true
                     });
                 } else {
                     resolve({
-                        success: false,
-                        errorInfo
+                        success: false
                     });
                 }
             });
@@ -176,7 +174,7 @@ async function installDep(target) {
 function yarnAccess() {
     try {
         cp.execSync("yarnpkg --version", { stdio: "ignore" });
-        return true;
+        return false;
     } catch (e) {
         return false;
     }
@@ -196,7 +194,7 @@ function startLoader() {
 
 //  output some develop infomation
 function outputInfo(language, { name }, target) {
-    console.log(`project create success! created ${name} at ${target}\n`);
+    console.log(`project create success! ${name} at ${cwd}\n`);
     console.log("inside that directory, you can run following commands:\n");
     switch(language) {
         case "JavaScript":

@@ -77,11 +77,9 @@ let projectMain = (() => {
 let installDep = (() => {
     var _ref6 = _asyncToGenerator(function* (target) {
         const useYarn = yarnAccess();
-        let install = null,
-            errorInfo = {};
+        let install = null;
         try {
             return new Promise(function (resolve, reject) {
-                errorInfo = false;
                 if (useYarn) {
                     install = cp.spawn("yarn", {
                         cwd: target,
@@ -95,14 +93,13 @@ let installDep = (() => {
                 }
 
                 install.on("close", function (code) {
-                    if (Object.keys(errorInfo).length === 0 || errorInfo.length === 0 || code === 0) {
+                    if (code === 0) {
                         resolve({
                             success: true
                         });
                     } else {
                         resolve({
-                            success: false,
-                            errorInfo
+                            success: false
                         });
                     }
                 });
@@ -216,6 +213,11 @@ inquirer.prompt({
 
         //  user input some project infomation
         name = yield projectName(name);
+        if (name.name !== args[0]) {
+            fse.moveSync(target, path.join(cwd, name.name));
+            target = path.join(cwd, name.name);
+        }
+
         version = yield projectVersion(version);
         description = yield projectDescription(description);
         main = yield projectMain(main);
@@ -225,20 +227,16 @@ inquirer.prompt({
         //  install dependences
         cConsole.cyan("installing packages. this might take a couple minutes...");
         installRes = yield installDep(target);
-        if (installRes) {
-            process.stdout.write("\n");
-            if (installRes.success) {
-                cConsole.cyan("dependences install success!");
-            } else {
-                cConsole.red("dependences install fail with following message!");
-                cConsole.red(installRes.errorInfo.toString());
-                process.exit(1);
-            }
-
+        console.log("");
+        if (installRes.success) {
+            cConsole.cyan("dependences install success!");
             //  output some developing infomation
             outputInfo(language, name, target);
-            process.exit(1);
+        } else {
+            yield fse.removeSync(target);
+            cConsole.red("dependences install fail!");
         }
+        process.exit(1);
     });
 
     return function (_x) {
@@ -247,7 +245,7 @@ inquirer.prompt({
 })());function yarnAccess() {
     try {
         cp.execSync("yarnpkg --version", { stdio: "ignore" });
-        return true;
+        return false;
     } catch (e) {
         return false;
     }
@@ -267,7 +265,7 @@ function startLoader() {
 
 //  output some develop infomation
 function outputInfo(language, { name }, target) {
-    console.log(`project create success! created ${name} at ${target}\n`);
+    console.log(`project create success! ${name} at ${cwd}\n`);
     console.log("inside that directory, you can run following commands:\n");
     switch (language) {
         case "JavaScript":
