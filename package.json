@@ -1,5 +1,5 @@
 {
-  "name": "create-koa-app",
+  "name": "create-koa-project",
   "version": "1.0.0",
   "description": "Easy way to use koa2",
   "scripts": {
