@@ -81,12 +81,12 @@ let installDep = (() => {
         try {
             return new Promise(function (resolve, reject) {
                 if (useYarn) {
-                    install = cp.spawn("yarn", {
+                    install = (0, _crossSpawn2.default)("yarn", {
                         cwd: target,
                         stdio: "inherit"
                     });
                 } else {
-                    install = cp.spawn("npm", ["install", "--exact"], {
+                    install = (0, _crossSpawn2.default)("npm", ["install", "--exact"], {
                         cwd: target,
                         stdio: "inherit"
                     });
@@ -147,6 +147,10 @@ var _minimist2 = _interopRequireDefault(_minimist);
 var _nodeVersion = require("node-version");
 
 var _nodeVersion2 = _interopRequireDefault(_nodeVersion);
+
+var _crossSpawn = require("cross-spawn");
+
+var _crossSpawn2 = _interopRequireDefault(_crossSpawn);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 

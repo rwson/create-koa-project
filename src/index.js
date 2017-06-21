@@ -7,6 +7,7 @@ import * as fse from "fs-extra-promise";
 import * as cConsole from "color-console";
 import minimist from "minimist";
 import nodeVersion from "node-version";
+import spawn from "cross-spawn";
 
 if (nodeVersion.major < 6) {
     cConsole.red("create-koa-app requires at least version 6 of NodeJs. Please upgrade!");
@@ -139,12 +140,12 @@ async function installDep(target) {
     try {
         return new Promise((resolve, reject) => {
             if (useYarn) {
-                install = cp.spawn("yarn", {
+                install = spawn("yarn", {
                     cwd: target,
                     stdio: "inherit"
                 });
             } else {
-                install = cp.spawn("npm", ["install", "--exact"], {
+                install = spawn("npm", ["install", "--exact"], {
                     cwd: target,
                     stdio: "inherit"
                 });
