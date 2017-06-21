@@ -7,12 +7,12 @@
     "dev": "nodemon run.js",
     "pm2": "pm2 start run.js -w -f"
   },
-  "keywords": [
-  ],
+  "keywords": [],
   "author": "",
   "license": "",
   "dependencies": {
     "babel-plugin-transform-es2015-modules-commonjs": "^6.24.1",
+    "babel-preset-env": "^1.5.2",
     "babel-preset-es2017": "^6.24.1",
     "babel-register": "^6.24.1",
     "bluebird": "^3.5.0",
