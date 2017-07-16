@@ -77,15 +77,17 @@ let projectMain = (() => {
 let installDep = (() => {
     var _ref6 = _asyncToGenerator(function* (target) {
         const useYarn = yarnAccess();
-        let install = null;
+        let install, last;
         try {
             return new Promise(function (resolve, reject) {
                 if (useYarn) {
+                    cConsole.cyan("your command line support 'yarn', use yarn to install");
                     install = (0, _crossSpawn2.default)("yarn", {
                         cwd: target,
                         stdio: "inherit"
                     });
                 } else {
+                    cConsole.cyan("your command line unsupport 'yarn', use npm to unsiall");
                     install = (0, _crossSpawn2.default)("npm", ["install", "--exact"], {
                         cwd: target,
                         stdio: "inherit"
@@ -182,6 +184,7 @@ let projectCfgMap = {
 },
     name = args[0],
     target = path.join(cwd, name),
+    trys = [],
     confirm;
 
 const exists = fse.existsSync(target);
@@ -249,7 +252,7 @@ inquirer.prompt({
 })());function yarnAccess() {
     try {
         cp.execSync("yarnpkg --version", { stdio: "ignore" });
-        return false;
+        return true;
     } catch (e) {
         return false;
     }
@@ -257,17 +260,18 @@ inquirer.prompt({
 
 //  output some develop infomation
 function outputInfo(language, { name }, target) {
+    const useYarn = yarnAccess();
     console.log(`project create success! ${name} at ${cwd}\n`);
     console.log("inside that directory, you can run following commands:\n");
     switch (language) {
         case "JavaScript":
-            cConsole.cyan("npm run dev");
+            cConsole.cyan(`${useYarn ? "yarn" : "npm"} run dev`);
             console.log("   use nodemon to run your app\n");
-            cConsole.cyan("npm run pm2");
+            cConsole.cyan(`${useYarn ? "yarn" : "npm"} npm run pm2`);
             console.log("   use pm2 to run your app\n");
             break;
         case "JavaScript":
-            cConsole.cyan("npm run dev");
+            cConsole.cyan(`${useYarn ? "yarn" : "npm"} run dev`);
             console.log("   typescript watch file changes & use nodemon to run your app\n");
             break;
         default:
