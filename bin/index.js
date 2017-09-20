@@ -267,7 +267,7 @@ function outputInfo(language, { name }, target) {
         case "JavaScript":
             cConsole.cyan(`${useYarn ? "yarn" : "npm"} run dev`);
             console.log("   use nodemon to run your app\n");
-            cConsole.cyan(`${useYarn ? "yarn" : "npm"} npm run pm2`);
+            cConsole.cyan(`${useYarn ? "yarn" : "npm"} run pm2`);
             console.log("   use pm2 to run your app\n");
             break;
         case "JavaScript":

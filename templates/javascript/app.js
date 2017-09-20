@@ -14,12 +14,15 @@ import index from "./router/index";
 const app = new Koa();
 
 // 全局错误处理
-app.use(async(ctx, next) => {
+app.use(async (ctx, next) => {
     try {
+        if (ctx.request.method == "OPTIONS") {
+            ctx.ok();
+        }
         await next();
     } catch (err) {
-        ctx.body = err;
-        ctx.status = err.status || 500;
+        ctx.error(new Error(err));
+        ctx.internalServerError(err);
     }
 });
 
