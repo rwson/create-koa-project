@@ -6,15 +6,21 @@ import * as send from "koa-send";
 import * as cors from "koa-cors";
 import * as convert from "koa-convert";
 import * as serve from "koa-static";
+import * as respond from "koa-respond";
 import * as path from "path";
 import index from "./router";
 
 const app = new Koa();
 
+//  https://www.npmjs.com/package/koa-respond
+app.use(respond());
+
 app.use(async (ctx, next) => {
     try {
-        await next();
+        ctx.set("Access-Control-Allow-Methods", "GET, POST, OPTIONS, PUT, DELETE");
+        ctx.set("Access-Control-Allow-Origin", "*");
         ctx.set("X-Powered-By", "create-koa-app");
+        await next();
     } catch (e) {
         ctx.status = e.status || 1;
         ctx.body = {

@@ -6,6 +6,7 @@ import send from "koa-send";
 import serve from "koa-static";
 import logger from "koa-logger";
 import convert from "koa-convert";
+import respond from "koa-respond";
 import bodyParser from "koa-bodyparser";
 import path from "path";
 
@@ -13,23 +14,19 @@ import index from "./router/index";
 
 const app = new Koa();
 
+//  https://www.npmjs.com/package/koa-respond
+app.use(respond());
+
 // 全局错误处理
-app.use(async (ctx, next) => {
+app.use(async(ctx, next) => {
     try {
-        if (ctx.request.method == "OPTIONS") {
-            ctx.ok();
-        }
+        ctx.set("Access-Control-Allow-Methods", "GET, POST, OPTIONS, PUT, DELETE");
+        ctx.set("Access-Control-Allow-Origin", "*");
+        ctx.set("X-Powered-By", "create-koa-app");
         await next();
     } catch (err) {
-        ctx.error(new Error(err));
         ctx.internalServerError(err);
     }
-});
-
-// 设置Header
-app.use(async(ctx, next) => {
-    await next();
-    ctx.set("X-Powered-By", "create-koa-app");
 });
 
 // 设置gzip

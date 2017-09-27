@@ -16,13 +16,17 @@ const send = require("koa-send");
 const cors = require("koa-cors");
 const convert = require("koa-convert");
 const serve = require("koa-static");
+const respond = require("koa-respond");
 const path = require("path");
 const router_1 = require("./router");
 const app = new Koa();
+app.use(respond());
 app.use((ctx, next) => __awaiter(this, void 0, void 0, function* () {
     try {
-        yield next();
+        ctx.set("Access-Control-Allow-Methods", "GET, POST, OPTIONS, PUT, DELETE");
+        ctx.set("Access-Control-Allow-Origin", "*");
         ctx.set("X-Powered-By", "create-koa-app");
+        yield next();
     }
     catch (e) {
         ctx.status = e.status || 1;
