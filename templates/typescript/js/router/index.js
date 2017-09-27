@@ -14,7 +14,7 @@ const index = new Router({
     prefix: "/"
 });
 const root = path.resolve(__dirname, "../../static");
-index.get("/", (ctx) => __awaiter(this, void 0, void 0, function* () {
+index.get("", (ctx) => __awaiter(this, void 0, void 0, function* () {
     yield ctx.send(ctx, "index.html", { root });
 }));
 index.get("swagger", (ctx) => __awaiter(this, void 0, void 0, function* () {

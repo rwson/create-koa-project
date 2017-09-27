@@ -2,7 +2,6 @@ import Koa from "koa";
 import cors from "koa-cors";
 import compress from "koa-compress";
 import json from "koa-json";
-import send from "koa-send";
 import serve from "koa-static";
 import logger from "koa-logger";
 import convert from "koa-convert";
@@ -49,12 +48,6 @@ app.use(bodyParser());
 
 // 静态文件夹
 app.use(convert(serve(path.resolve(__dirname, "static"))));
-
-// 发送静态文件，如HTML等
-app.use(async(ctx, next) => {
-    ctx.send = send;
-    await next();
-});
 
 // 路由
 app.use(index.routes());
