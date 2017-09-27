@@ -7,8 +7,8 @@ const index = new Router({
 
 const root = path.resolve(__dirname, "../../static");
 
-index.get("/", async ctx => {
-    await ctx.send(ctx, "index.html", { root });
+index.get("", async ctx => {
+	await ctx.send(ctx, "index.html", { root });
 });
 
 index.get("swagger", async ctx => {

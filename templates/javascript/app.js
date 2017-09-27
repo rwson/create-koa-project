@@ -2,16 +2,19 @@ import Koa from "koa";
 import cors from "koa-cors";
 import compress from "koa-compress";
 import json from "koa-json";
-import send from "koa-send";
 import serve from "koa-static";
 import logger from "koa-logger";
 import convert from "koa-convert";
+import respond from "koa-respond";
 import bodyParser from "koa-bodyparser";
 import path from "path";
 
 import index from "./router/index";
 
 const app = new Koa();
+
+//  https://github.com/jeffijoe/koa-respond
+app.use(respond());
 
 // 全局错误处理
 app.use(async (ctx, next) => {
@@ -21,7 +24,6 @@ app.use(async (ctx, next) => {
         }
         await next();
     } catch (err) {
-        ctx.error(new Error(err));
         ctx.internalServerError(err);
     }
 });
@@ -52,12 +54,6 @@ app.use(bodyParser());
 
 // 静态文件夹
 app.use(convert(serve(path.resolve(__dirname, "static"))));
-
-// 发送静态文件，如HTML等
-app.use(async(ctx, next) => {
-    ctx.send = send;
-    await next();
-});
 
 // 路由
 app.use(index.routes());
