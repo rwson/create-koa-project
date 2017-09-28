@@ -7,6 +7,7 @@ import logger from "koa-logger";
 import convert from "koa-convert";
 import respond from "koa-respond";
 import bodyParser from "koa-bodyparser";
+import send from "koa-send";
 import path from "path";
 
 import index from "./router/index";
@@ -18,6 +19,7 @@ app.use(respond());
 
 // 全局错误处理
 app.use(async(ctx, next) => {
+    ctx.send = send;
     try {
         ctx.set("Access-Control-Allow-Methods", "GET, POST, OPTIONS, PUT, DELETE");
         ctx.set("Access-Control-Allow-Origin", "*");

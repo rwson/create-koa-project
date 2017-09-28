@@ -7,6 +7,7 @@ import * as json from "koa-json";
 import * as convert from "koa-convert";
 import * as serve from "koa-static";
 import * as respond from "koa-respond";
+import * as send from "koa-send";
 import * as path from "path";
 import index from "./router";
 
@@ -16,6 +17,7 @@ const app = new Koa();
 app.use(respond());
 
 app.use(async (ctx, next) => {
+    ctx.send = send;
     try {
         ctx.set("Access-Control-Allow-Methods", "GET, POST, OPTIONS, PUT, DELETE");
         ctx.set("Access-Control-Allow-Origin", "*");
