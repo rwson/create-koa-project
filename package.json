@@ -1,6 +1,6 @@
 {
   "name": "create-koa-project",
-  "version": "1.6.1",
+  "version": "1.6.2",
   "description": "easy way to create project based on koa2",
   "scripts": {
     "watch": "babel src --watch --out-dir bin",
