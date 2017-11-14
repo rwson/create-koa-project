@@ -174,13 +174,15 @@ if (!args.length) {
 
 const templatesMap = {
     JavaScript: path.resolve(__dirname, "../", "templates/javascript"),
-    TypeScript: path.resolve(__dirname, "../", "templates/typescript")
+    TypeScript: path.resolve(__dirname, "../", "templates/typescript"),
+    DecoratorRouter: path.resolve(__dirname, "../", "templates/decorator-router")
 },
       cwd = process.cwd();
 
 let projectCfgMap = {
     JavaScript: fse.readJsonSync(path.resolve(templatesMap.JavaScript, "package.json")),
-    TypeScript: fse.readJsonSync(path.resolve(templatesMap.TypeScript, "package.json"))
+    TypeScript: fse.readJsonSync(path.resolve(templatesMap.TypeScript, "package.json")),
+    DecoratorRouter: fse.readJsonSync(path.resolve(templatesMap.DecoratorRouter, "package.json"))
 },
     name = args[0],
     target = path.join(cwd, name),
@@ -200,11 +202,23 @@ if (exists) {
 inquirer.prompt({
     name: "language",
     message: "which language would you like to write this project?",
-    choices: ["JavaScript", "TypeScript"],
+    choices: ["JavaScript", "TypeScript", "DecoratorRouter(TypeScript)"],
     type: "list"
 }).then((() => {
     var _ref = _asyncToGenerator(function* ({ language }) {
         let target, copyRes, installRes, interval, name, version, description, main, asyncRes;
+
+        //  tranform DecoratorRouter(TypeScript) value
+        if (language !== "JavaScript" && language !== "TypeScript") {
+            language = "DecoratorRouter";
+        }
+
+        //  tsc check
+        if (language !== "JavaScript" && !tscAccess()) {
+            cConsole.red("you select `TypeScript` as your project language, but your system is missing global typescript environment!");
+            cConsole.cyan("please run `npm install typescript -g` before you choose `TypeScript` as your project language");
+            process.exit(1);
+        }
 
         //  initialize variables
         name = args[0];
@@ -251,7 +265,21 @@ inquirer.prompt({
     };
 })());function yarnAccess() {
     try {
-        cp.execSync("yarnpkg --version", { stdio: "ignore" });
+        cp.execSync("yarnpkg --version", {
+            stdio: "ignore"
+        });
+        return true;
+    } catch (e) {
+        return false;
+    }
+}
+
+//  global typescript environment
+function tscAccess() {
+    try {
+        cp.execSync("tsc -v", {
+            stdio: "ignore"
+        });
         return true;
     } catch (e) {
         return false;

@@ -23,18 +23,20 @@ if (!args.length) {
 
 const templatesMap = {
         JavaScript: path.resolve(__dirname, "../", "templates/javascript"),
-        TypeScript: path.resolve(__dirname, "../", "templates/typescript")
+        TypeScript: path.resolve(__dirname, "../", "templates/typescript"),
+        DecoratorRouter: path.resolve(__dirname, "../", "templates/decorator-router")
     },
     cwd = process.cwd();
 
 let projectCfgMap = {
-    JavaScript: fse.readJsonSync(path.resolve(templatesMap.JavaScript, "package.json")),
-    TypeScript: fse.readJsonSync(path.resolve(templatesMap.TypeScript, "package.json"))
-},
-name = args[0],
-target = path.join(cwd, name),
-trys = [],
-confirm;
+        JavaScript: fse.readJsonSync(path.resolve(templatesMap.JavaScript, "package.json")),
+        TypeScript: fse.readJsonSync(path.resolve(templatesMap.TypeScript, "package.json")),
+        DecoratorRouter: fse.readJsonSync(path.resolve(templatesMap.DecoratorRouter, "package.json"))
+    },
+    name = args[0],
+    target = path.join(cwd, name),
+    trys = [],
+    confirm;
 
 const exists = fse.existsSync(target);
 
@@ -49,10 +51,22 @@ if (exists) {
 inquirer.prompt({
     name: "language",
     message: "which language would you like to write this project?",
-    choices: ["JavaScript", "TypeScript"],
+    choices: ["JavaScript", "TypeScript", "DecoratorRouter(TypeScript)"],
     type: "list"
 }).then(async({ language }) => {
     let target, copyRes, installRes, interval, name, version, description, main, asyncRes;
+
+    //  tranform DecoratorRouter(TypeScript) value
+    if (language !== "JavaScript" && language !== "TypeScript") {
+        language = "DecoratorRouter";
+    }
+
+    //  tsc check
+    if (language !== "JavaScript" && !tscAccess()) {
+        cConsole.red("you select `TypeScript` as your project language, but your system is missing global typescript environment!");
+        cConsole.cyan("please run `npm install typescript -g` before you choose `TypeScript` as your project language");
+        process.exit(1);
+    }
 
     //  initialize variables
     name = args[0];
@@ -177,7 +191,21 @@ async function installDep(target) {
 //  should use yarn
 function yarnAccess() {
     try {
-        cp.execSync("yarnpkg --version", { stdio: "ignore" });
+        cp.execSync("yarnpkg --version", {
+            stdio: "ignore"
+        });
+        return true;
+    } catch (e) {
+        return false;
+    }
+}
+
+//  global typescript environment
+function tscAccess() {
+    try {
+        cp.execSync("tsc -v", {
+            stdio: "ignore"
+        });
         return true;
     } catch (e) {
         return false;
@@ -189,19 +217,19 @@ function outputInfo(language, { name }, target) {
     const useYarn = yarnAccess();
     console.log(`project create success! ${name} at ${cwd}\n`);
     console.log("inside that directory, you can run following commands:\n");
-    switch(language) {
+    switch (language) {
         case "JavaScript":
             cConsole.cyan(`${useYarn ? "yarn" : "npm"} run dev`);
             console.log("   use nodemon to run your app\n");
             cConsole.cyan(`${useYarn ? "yarn" : "npm"} run pm2`);
             console.log("   use pm2 to run your app\n");
-        break;
+            break;
         case "JavaScript":
             cConsole.cyan(`${useYarn ? "yarn" : "npm"} run dev`);
             console.log("   typescript watch file changes & use nodemon to run your app\n");
-        break;
+            break;
         default:
-        break;
+            break;
     }
     console.log("happy coding! ^_^");
 }
