@@ -24,14 +24,14 @@ if (!args.length) {
 const templatesMap = {
         JavaScript: path.resolve(__dirname, "../", "templates/javascript"),
         TypeScript: path.resolve(__dirname, "../", "templates/typescript"),
-        DecoratorRouter: path.resolve(__dirname, "../", "templates/decorator-router")
+        // DecoratorRouter: path.resolve(__dirname, "../", "templates/decorator-router")
     },
     cwd = process.cwd();
 
 let projectCfgMap = {
         JavaScript: fse.readJsonSync(path.resolve(templatesMap.JavaScript, "package.json")),
         TypeScript: fse.readJsonSync(path.resolve(templatesMap.TypeScript, "package.json")),
-        DecoratorRouter: fse.readJsonSync(path.resolve(templatesMap.DecoratorRouter, "package.json"))
+        // DecoratorRouter: fse.readJsonSync(path.resolve(templatesMap.DecoratorRouter, "package.json"))
     },
     name = args[0],
     target = path.join(cwd, name),
@@ -51,15 +51,16 @@ if (exists) {
 inquirer.prompt({
     name: "language",
     message: "which language would you like to write this project?",
-    choices: ["JavaScript", "TypeScript", "DecoratorRouter(TypeScript)"],
+    // choices: ["JavaScript", "TypeScript", "DecoratorRouter(TypeScript)"],
+    choices: ["JavaScript", "TypeScript"],
     type: "list"
 }).then(async({ language }) => {
     let target, copyRes, installRes, interval, name, version, description, main, asyncRes;
 
     //  tranform DecoratorRouter(TypeScript) value
-    if (language !== "JavaScript" && language !== "TypeScript") {
-        language = "DecoratorRouter";
-    }
+    // if (language !== "JavaScript" && language !== "TypeScript") {
+    //     language = "DecoratorRouter";
+    // }
 
     //  tsc check
     if (language !== "JavaScript" && !tscAccess()) {
@@ -77,7 +78,7 @@ inquirer.prompt({
 
     //  copy file
     cConsole.cyan("copy files...");
-    copyRes = await await fse.copySync(templatesMap[language], target);
+    copyRes = await fse.copySync(templatesMap[language], target);
     cConsole.cyan("copy file success!");
 
     //  user input some project infomation
@@ -155,13 +156,13 @@ async function installDep(target) {
     try {
         return new Promise((resolve, reject) => {
             if (useYarn) {
-                cConsole.cyan("your command line support 'yarn', use yarn to install");
+                cConsole.cyan("your command line support 'yarn', use yarn to install dependencies");
                 install = spawn("yarn", {
                     cwd: target,
                     stdio: "inherit"
                 });
             } else {
-                cConsole.cyan("your command line unsupport 'yarn', use npm to unsiall");
+                cConsole.cyan("your command line unsupport 'yarn', use npm to insiall dependencies");
                 install = spawn("npm", ["install", "--exact"], {
                     cwd: target,
                     stdio: "inherit"
