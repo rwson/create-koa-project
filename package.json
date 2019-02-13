@@ -22,13 +22,13 @@
     "color-console": "0.0.1",
     "cross-spawn": "^5.1.0",
     "fs-extra-promise": "^1.0.1",
-    "inquirer": "^3.1.0",
-    "node-version": "^1.0.0",
-    "minimist": "^1.0.0"
+    "inquirer": "^3.3.0",
+    "minimist": "^1.0.0",
+    "node-version": "^1.2.0"
   },
   "devDependencies": {
-    "babel-cli": "^6.24.1",
-    "babel-core": "^6.25.0",
+    "babel-cli": "^6.26.0",
+    "babel-core": "^6.26.3",
     "babel-preset-node6": "^11.0.0",
     "babel-preset-stage-3": "^6.24.1"
   }

@@ -1,13 +1,13 @@
 #!/usr/bin/env node
-"use strict";
+'use strict';
 
 //  user select project name
 let projectName = (() => {
     var _ref2 = _asyncToGenerator(function* (defaultName) {
         return yield inquirer.prompt({
-            name: "name",
-            message: "your project name",
-            type: "input",
+            name: 'name',
+            message: 'your project name',
+            type: 'input',
             default: defaultName
         });
     });
@@ -23,9 +23,9 @@ let projectName = (() => {
 let projectVersion = (() => {
     var _ref3 = _asyncToGenerator(function* (defaultVersion) {
         return yield inquirer.prompt({
-            name: "version",
-            message: "your project version",
-            type: "input",
+            name: 'version',
+            message: 'your project version',
+            type: 'input',
             default: defaultVersion
         });
     });
@@ -41,9 +41,9 @@ let projectVersion = (() => {
 let projectDescription = (() => {
     var _ref4 = _asyncToGenerator(function* (defaultDescription) {
         return yield inquirer.prompt({
-            name: "description",
-            message: "your project description",
-            type: "input",
+            name: 'description',
+            message: 'your project description',
+            type: 'input',
             default: defaultDescription
         });
     });
@@ -59,9 +59,9 @@ let projectDescription = (() => {
 let projectMain = (() => {
     var _ref5 = _asyncToGenerator(function* (defaultMain) {
         return yield inquirer.prompt({
-            name: "main",
-            message: "your project main scripts",
-            type: "input",
+            name: 'main',
+            message: 'your project main scripts',
+            type: 'input',
             default: defaultMain
         });
     });
@@ -77,24 +77,24 @@ let projectMain = (() => {
 let installDep = (() => {
     var _ref6 = _asyncToGenerator(function* (target) {
         const useYarn = yarnAccess();
-        let install, last;
+        let install;
         try {
             return new Promise(function (resolve, reject) {
                 if (useYarn) {
-                    cConsole.cyan("your command line support 'yarn', use yarn to install dependencies");
-                    install = (0, _crossSpawn2.default)("yarn", {
+                    cConsole.cyan('your command line supported \'yarn\', use yarn to install dependencies');
+                    install = (0, _crossSpawn2.default)('yarn', {
                         cwd: target,
-                        stdio: "inherit"
+                        stdio: 'inherit'
                     });
                 } else {
-                    cConsole.cyan("your command line unsupport 'yarn', use npm to insiall dependencies");
-                    install = (0, _crossSpawn2.default)("npm", ["install", "--exact"], {
+                    cConsole.cyan('your command line unsupported \'yarn\', use npm to install dependencies');
+                    install = (0, _crossSpawn2.default)('npm', ['install', '--exact'], {
                         cwd: target,
-                        stdio: "inherit"
+                        stdio: 'inherit'
                     });
                 }
 
-                install.on("close", function (code) {
+                install.on('close', function (code) {
                     if (code === 0) {
                         resolve({
                             success: true
@@ -109,7 +109,7 @@ let installDep = (() => {
         } catch (e) {
             return {
                 success: false,
-                error: ex
+                error: e
             };
         }
     });
@@ -122,35 +122,35 @@ let installDep = (() => {
 //  should use yarn
 
 
-var _child_process = require("child_process");
+var _child_process = require('child_process');
 
 var cp = _interopRequireWildcard(_child_process);
 
-var _path = require("path");
+var _path = require('path');
 
 var path = _interopRequireWildcard(_path);
 
-var _inquirer = require("inquirer");
+var _inquirer = require('inquirer');
 
 var inquirer = _interopRequireWildcard(_inquirer);
 
-var _fsExtraPromise = require("fs-extra-promise");
+var _fsExtraPromise = require('fs-extra-promise');
 
 var fse = _interopRequireWildcard(_fsExtraPromise);
 
-var _colorConsole = require("color-console");
+var _colorConsole = require('color-console');
 
 var cConsole = _interopRequireWildcard(_colorConsole);
 
-var _minimist = require("minimist");
+var _minimist = require('minimist');
 
 var _minimist2 = _interopRequireDefault(_minimist);
 
-var _nodeVersion = require("node-version");
+var _nodeVersion = require('node-version');
 
 var _nodeVersion2 = _interopRequireDefault(_nodeVersion);
 
-var _crossSpawn = require("cross-spawn");
+var _crossSpawn = require('cross-spawn');
 
 var _crossSpawn2 = _interopRequireDefault(_crossSpawn);
 
@@ -161,33 +161,29 @@ function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj;
 function _asyncToGenerator(fn) { return function () { var gen = fn.apply(this, arguments); return new Promise(function (resolve, reject) { function step(key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { return Promise.resolve(value).then(function (value) { step("next", value); }, function (err) { step("throw", err); }); } } return step("next"); }); }; }
 
 if (_nodeVersion2.default.major < 6) {
-    cConsole.red("create-koa-app requires at least version 6 of NodeJs. Please upgrade!");
+    cConsole.red('create-koa-app requires at least version 6 of NodeJs. Please upgrade!');
     process.exit(1);
 }
 
-const args = (0, _minimist2.default)(process.argv.slice(2))["_"];
+const args = (0, _minimist2.default)(process.argv.slice(2))['_'];
 
 if (!args.length) {
-    cConsole.red("you must provide the project name you will create!");
+    cConsole.red('you must provide the project name you will create!');
     process.exit(1);
 }
 
 const templatesMap = {
-    JavaScript: path.resolve(__dirname, "../", "templates/javascript"),
-    TypeScript: path.resolve(__dirname, "../", "templates/typescript")
-    // DecoratorRouter: path.resolve(__dirname, "../", "templates/decorator-router")
+    JavaScript: path.resolve(__dirname, '../', 'templates/javascript'),
+    TypeScript: path.resolve(__dirname, '../', 'templates/typescript')
 },
       cwd = process.cwd();
 
 let projectCfgMap = {
-    JavaScript: fse.readJsonSync(path.resolve(templatesMap.JavaScript, "package.json")),
-    TypeScript: fse.readJsonSync(path.resolve(templatesMap.TypeScript, "package.json"))
-    // DecoratorRouter: fse.readJsonSync(path.resolve(templatesMap.DecoratorRouter, "package.json"))
+    JavaScript: fse.readJsonSync(path.resolve(templatesMap.JavaScript, 'package.json')),
+    TypeScript: fse.readJsonSync(path.resolve(templatesMap.TypeScript, 'package.json'))
 },
     name = args[0],
-    target = path.join(cwd, name),
-    trys = [],
-    confirm;
+    target = path.join(cwd, name);
 
 const exists = fse.existsSync(target);
 
@@ -197,44 +193,39 @@ if (exists) {
     process.exit(1);
 }
 
-// cConsole.cyan("this command will create project based on koa2, if you want to use koa1, please use 'create-koa-app koa#1 <project name>'");
+// cConsole.cyan('this command will create project based on koa2, if you want to use koa1, please use 'create-koa-app koa#1 <project name>'');
 
 inquirer.prompt({
-    name: "language",
-    message: "which language would you like to write this project?",
-    // choices: ["JavaScript", "TypeScript", "DecoratorRouter(TypeScript)"],
-    choices: ["JavaScript", "TypeScript"],
-    type: "list"
+    name: 'language',
+    message: 'which language would you like to write this project?',
+    choices: ['JavaScript', 'TypeScript'],
+    type: 'list'
 }).then((() => {
     var _ref = _asyncToGenerator(function* ({ language }) {
-        let target, copyRes, installRes, interval, name, version, description, main, asyncRes;
-
-        //  tranform DecoratorRouter(TypeScript) value
-        // if (language !== "JavaScript" && language !== "TypeScript") {
-        //     language = "DecoratorRouter";
-        // }
+        let target, installRes, name, version, description, main;
 
         //  tsc check
-        if (language !== "JavaScript" && !tscAccess()) {
-            cConsole.red("you select `TypeScript` as your project language, but your system is missing global typescript environment!");
-            cConsole.cyan("please run `npm install typescript -g` before you choose `TypeScript` as your project language");
+        if (language !== 'JavaScript' && !tscAccess()) {
+            cConsole.red('you select `TypeScript` as your project language, but your system is missing global typescript environment!');
+            cConsole.cyan('please run `npm install typescript -g` before you choose `TypeScript` as your project language');
             process.exit(1);
         }
 
         //  initialize variables
         name = args[0];
-        version = "1.0.0";
-        description = "a koa app";
-        main = "index.js";
+        version = '1.0.0';
+        description = 'a koa app';
+        main = 'index.js';
         target = path.join(cwd, name);
 
         //  copy file
-        cConsole.cyan("copy files...");
-        copyRes = yield fse.copySync(templatesMap[language], target);
-        cConsole.cyan("copy file success!");
+        cConsole.cyan('copy files...');
+        yield fse.copySync(templatesMap[language], target);
+        cConsole.cyan('copy file success!');
 
-        //  user input some project infomation
+        //  user input some project information
         name = yield projectName(name);
+
         if (name.name !== args[0]) {
             fse.moveSync(target, path.join(cwd, name.name));
             target = path.join(cwd, name.name);
@@ -244,19 +235,19 @@ inquirer.prompt({
         description = yield projectDescription(description);
         main = yield projectMain(main);
         projectCfgMap[language] = mergeInfo(projectCfgMap[language], name, version, description, main);
-        yield fse.outputJsonSync(path.join(target, "package.json"), projectCfgMap[language]);
+        yield fse.outputJsonSync(path.join(target, 'package.json'), projectCfgMap[language]);
 
-        //  install dependences
-        cConsole.cyan("installing packages. this might take a couple minutes...");
+        //  install dependence
+        cConsole.cyan('installing packages, this might take a couple minutes...');
         installRes = yield installDep(target);
-        console.log("");
+        console.log('');
         if (installRes.success) {
-            cConsole.cyan("dependences install success!");
-            //  output some developing infomation
+            cConsole.cyan('dependencies install success!');
+            //  output some developing information
             outputInfo(language, name, target);
         } else {
             yield fse.removeSync(target);
-            cConsole.red("dependences install fail!");
+            cConsole.red('dependencies install fail!');
         }
         process.exit(1);
     });
@@ -266,8 +257,8 @@ inquirer.prompt({
     };
 })());function yarnAccess() {
     try {
-        cp.execSync("yarnpkg --version", {
-            stdio: "ignore"
+        cp.execSync('yarnpkg --version', {
+            stdio: 'ignore'
         });
         return true;
     } catch (e) {
@@ -278,8 +269,8 @@ inquirer.prompt({
 //  global typescript environment
 function tscAccess() {
     try {
-        cp.execSync("tsc -v", {
-            stdio: "ignore"
+        cp.execSync('tsc -v', {
+            stdio: 'ignore'
         });
         return true;
     } catch (e) {
@@ -291,22 +282,22 @@ function tscAccess() {
 function outputInfo(language, { name }, target) {
     const useYarn = yarnAccess();
     console.log(`project create success! ${name} at ${cwd}\n`);
-    console.log("inside that directory, you can run following commands:\n");
+    console.log('inside that directory, you can run following commands:\n');
     switch (language) {
-        case "JavaScript":
-            cConsole.cyan(`${useYarn ? "yarn" : "npm"} run dev`);
-            console.log("   use nodemon to run your app\n");
-            cConsole.cyan(`${useYarn ? "yarn" : "npm"} run pm2`);
-            console.log("   use pm2 to run your app\n");
+        case 'JavaScript':
+            cConsole.cyan(`${useYarn ? 'yarn' : 'npm'} run dev`);
+            console.log('   use nodemon to run your app\n');
+            cConsole.cyan(`${useYarn ? 'yarn' : 'npm'} run pm2`);
+            console.log('   use pm2 to run your app\n');
             break;
-        case "JavaScript":
-            cConsole.cyan(`${useYarn ? "yarn" : "npm"} run dev`);
-            console.log("   typescript watch file changes & use nodemon to run your app\n");
+        case 'JavaScript':
+            cConsole.cyan(`${useYarn ? 'yarn' : 'npm'} run dev`);
+            console.log('   typescript watch file changes & use nodemon to run your app\n');
             break;
         default:
             break;
     }
-    console.log("happy coding! ^_^");
+    console.log('happy coding! ^_^');
 }
 
 //  merge keys to object
