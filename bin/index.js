@@ -217,6 +217,13 @@ function createKoaApp({
             description
         }) {
 
+            //  tsc check
+            if (language !== 'JavaScript' && !tscAccess()) {
+                cConsole.red('you select `TypeScript` as your project language, but your system is missing global typescript environment!');
+                cConsole.cyan('please run `npm install typescript -g` before you choose `TypeScript` as your project language');
+                process.exit(1);
+            }
+
             if (name !== args[0]) {
                 fse.moveSync(target, path.join(cwd, name));
                 target = path.join(cwd, name);
