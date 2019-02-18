@@ -1,10 +1,9 @@
 {
   "name": "create-koa-project",
-  "version": "1.6.3",
+  "version": "1.7.0",
   "description": "easy way to create project based on koa2",
   "scripts": {
-    "watch": "babel src --watch --out-dir bin",
-    "test": "node bin/index.js"
+    "watch": "babel src --watch --out-dir bin"
   },
   "engines": {
     "node": ">=6"
